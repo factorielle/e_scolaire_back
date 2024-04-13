@@ -2,14 +2,21 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
+from rest_framework import permissions
+from rest_framework.decorators import api_view, permission_classes
 from StudentApp.models import Matiere, Note, Classe, Admission, Eleve, Inscription, Professeur, Enseignement, Admin, Dossier, Rapport, Appreciation, Bulletin, Certificat
 from StudentApp.serializers import MatiereSerializer, NoteSerializer, ClasseSerializer, AdmissionSerializer, EleveSerializer, InscriptionSerializer, ProfesseurSerializer, EnseignementSerializer, AdminSerializer, DossierSerializer, RapportSerializer, AppreciationSerializer, BulletinSerializer, CertificatSerializer
 
 
 # Create your views here.
 
-@csrf_exempt
+
+
+
 # eleve
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
 def studentApi(request, id=0):
     if request.method == 'GET':
         # Récupérer tous les étudiants
@@ -42,7 +49,8 @@ def studentApi(request, id=0):
         return JsonResponse("Deleted Successfully", safe=False)
 
 # professeur
-@csrf_exempt
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
 def profApi(request, id=0):
     if request.method == 'GET':
         # Récupérer tous les étudiants

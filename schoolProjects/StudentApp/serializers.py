@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Matiere, Note, Classe, Admission, Eleve, Inscription, Professeur, Enseignement, Admin, Dossier, Rapport, Appreciation, Bulletin, Certificat
+from .models import Matiere, Note, Classe, Admission, Eleve, Parent, Inscription, Professeur, Enseignement, Admin, Dossier, Rapport, Appreciation, Bulletin, Certificat, User
 
 class MatiereSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,6 +24,15 @@ class AdmissionSerializer(serializers.ModelSerializer):
 class EleveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Eleve
+        fields = '__all__'
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+class ParentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Parent
         fields = '__all__'
 
 class InscriptionSerializer(serializers.ModelSerializer):

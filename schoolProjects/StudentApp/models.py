@@ -1,7 +1,33 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import AbstractUser
 
 
+
+# modele de base utilisateur
+class User(AbstractUser):
+    ROLE_CHOICES = [
+        ('parent', 'Parent'),
+        ('prof', 'Professeur'),
+        ('eleve', 'Élève'),
+        ('admin', 'Administrateur'),
+    ]
+
+    nom = models.CharField(max_length=100)
+    prenom = models.CharField(max_length=100)
+    email = models.EmailField()
+    telephone = models.CharField(max_length=20)
+    adresse = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)  
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+
+    def save(self, *args, **kwargs):
+        self.password = make_password(self.password)  # Hasher le mot de passe avant de l'enregistrer
+        super().save(*args, **kwargs)
+
+    class Meta:
+        abstract = True
+  
 
 # Modèle pour la table Matiere
 class Matiere(models.Model):
@@ -25,25 +51,14 @@ class Admission(models.Model):
     annee = models.IntegerField()
 
 # Modèle pour la table Eleve
-class Eleve(models.Model):
-    nom = models.CharField(max_length=100)
-    prenom = models.CharField(max_length=100)
-    date_de_naissance = models.DateField()
-    email = models.EmailField()
-    telephone = models.CharField(max_length=20)
-    adresse = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
+class Eleve(User):
     classes = models.ManyToManyField(Classe, through='Admission')
+    date_naissance = models.DateField()
 
 
 # Modele pour la table parent
-class Parent(models.Model):
-    nom = models.CharField(max_length=100)
-    prenom = models.CharField(max_length=100)
-    email = models.EmailField()
-    telephone = models.CharField(max_length=20)
-    adresse = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
+class Parent(User):
+    pass
 
 # Modèle pour la table Inscription
 class Inscription(models.Model):
@@ -52,15 +67,7 @@ class Inscription(models.Model):
     
 
 # Modèle pour la table Professeur
-class Professeur(models.Model):
-
-    nom = models.CharField(max_length=100)
-    prenom = models.CharField(max_length=100)
-    # id = models.CharField(max_length=100)
-    email = models.EmailField()
-    telephone = models.CharField(max_length=20)
-    adresse = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
+class Professeur(User):
     matieres = models.ManyToManyField(Matiere, through='Enseignement')
 
 # Table d'association pour la relation plusieurs à plusieurs entre Professeur et Matiere
@@ -69,14 +76,8 @@ class Enseignement(models.Model):
     matiere = models.ForeignKey(Matiere, on_delete=models.CASCADE)
 
 # Modèle pour la table Admin
-class Admin(models.Model):
-    nom = models.CharField(max_length=100)
-    prenom = models.CharField(max_length=100)
-    # id = models.CharField(max_length=100)
-    email = models.EmailField()
-    telephone = models.CharField(max_length=20)
-    adresse = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
+class Admin(User):
+   pass
 
 # Modèle pour la table Dossier
 class Dossier(models.Model):
