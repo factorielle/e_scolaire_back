@@ -15,7 +15,7 @@ from StudentApp.serializers import MatiereSerializer, UserSerializer, NoteSerial
 # Create your views here.
 
 
-# login
+# Inscription
 class UserSignup(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -23,12 +23,12 @@ class UserSignup(APIView):
             user = serializer.save()
             return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+#  connnexion
 class UserLogin(APIView):
     def post(self, request):
-        username = request.data.get('username')
+        email = request.data.get('email')
         password = request.data.get('password')
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             return Response({"message": "User logged in successfully"}, status=status.HTTP_200_OK)
@@ -42,38 +42,38 @@ class UserLogin(APIView):
 
 # eleve
 
-# @api_view(['GET'])
-# @permission_classes([permissions.IsAuthenticated])
-# def studentApi(request, id=0):
-#     if request.method == 'GET':
-#         # Récupérer tous les étudiants
-#         students = Eleve.objects.all()
-#         # Sérialiser les étudiants
-#         student_serializer = EleveSerializer(students, many=True)
-#         # Retourner les données sérialisées en tant que réponse JSON
-#         return JsonResponse(student_serializer.data, safe=False)
-#     elif request.method == 'POST':
-#         # Analyser les données JSON de la requête
-#         student_data = JSONParser().parse(request)
-#         # Créer un sérialiseur pour les données de l'étudiant
-#         student_serializer = EleveSerializer(data=student_data)
-#         if student_serializer.is_valid():
-#             # Sauvegarder l'étudiant dans la base de données
-#             student_serializer.save()
-#             return JsonResponse("Added Successfully", safe=False)
-#         return JsonResponse("Failed to Add", safe=False)
-#     elif request.method == 'PUT':
-#         student_data = JSONParser().parse(request)
-#         student = Eleve.objects.get(id=id)
-#         student_serializer = EleveSerializer(student, data=student_data)
-#         if student_serializer.is_valid():
-#             student_serializer.save()
-#             return JsonResponse("Updated Successfully", safe=False)
-#         return JsonResponse("Failed to Update")
-#     elif request.method == 'DELETE':
-#         student = Eleve.objects.get(id=id)
-#         student.delete()
-#         return JsonResponse("Deleted Successfully", safe=False)
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def studentApi(request, id=0):
+    if request.method == 'GET':
+        # Récupérer tous les étudiants
+        students = Eleve.objects.all()
+        # Sérialiser les étudiants
+        student_serializer = EleveSerializer(students, many=True)
+        # Retourner les données sérialisées en tant que réponse JSON
+        return JsonResponse(student_serializer.data, safe=False)
+    elif request.method == 'POST':
+        # Analyser les données JSON de la requête
+        student_data = JSONParser().parse(request)
+        # Créer un sérialiseur pour les données de l'étudiant
+        student_serializer = EleveSerializer(data=student_data)
+        if student_serializer.is_valid():
+            # Sauvegarder l'étudiant dans la base de données
+            student_serializer.save()
+            return JsonResponse("Added Successfully", safe=False)
+        return JsonResponse("Failed to Add", safe=False)
+    elif request.method == 'PUT':
+        student_data = JSONParser().parse(request)
+        student = Eleve.objects.get(id=id)
+        student_serializer = EleveSerializer(student, data=student_data)
+        if student_serializer.is_valid():
+            student_serializer.save()
+            return JsonResponse("Updated Successfully", safe=False)
+        return JsonResponse("Failed to Update")
+    elif request.method == 'DELETE':
+        student = Eleve.objects.get(id=id)
+        student.delete()
+        return JsonResponse("Deleted Successfully", safe=False)
 
 # # professeur
 # @api_view(['GET'])

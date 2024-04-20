@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from StudentApp.views import UserSignup, UserLogin 
+from StudentApp.views import UserSignup, UserLogin , studentApi
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', UserSignup.as_view(), name='user-signup'),
     path('login/', UserLogin.as_view(), name='user-login'),
+    path('eleve/', studentApi, name='crud-eleve'),
 ]
